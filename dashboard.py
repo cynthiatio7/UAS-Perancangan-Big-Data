@@ -25,3 +25,45 @@ col4.metric("Unique Users",   df['user_id'].nunique())
 
 st.divider()
 
+st.title("Critical Alert Table")
+critical_df = df[df['alert_level'] == 'CRITICAL']
+st.dataframe(critical_df, use_container_width=True)
+ 
+st.divider()
+
+st.title("🛡️ Rekomendasi Mitigasi Ancaman")
+st.markdown("Panduan langkah-langkah mitigasi berdasarkan pola anomali yang terdeteksi:")
+
+mitigasi = {
+    "Pola 1 - Terminated User": [
+        "Nonaktifkan akun otomatis saat karyawan keluar (offboarding otomatis)",
+        "Audit akun secara berkala untuk cari akun yang belum dinonaktifkan",
+        "Terapkan Zero Trust: semua sesi harus diverifikasi ulang",
+    ],
+    "Pola 2 - Download Besar Data Sensitif": [
+        "Pasang DLP (Data Loss Prevention) untuk blokir transfer data besar tanpa izin",
+        "Enkripsi semua aset confidential dan restricted",
+        "Batasi akses hanya ke aset yang benar-benar dibutuhkan (least privilege)",
+    ],
+    "Pola 3 - Permission Change dari IP Eksternal": [
+        "Batasi permission change hanya dari jaringan internal atau VPN",
+        "Wajibkan MFA (Multi-Factor Authentication) untuk ubah hak akses",
+        "Setiap perubahan hak akses butuh persetujuan minimal 2 orang",
+    ],
+    "Pola 4 - Clearance Mismatch": [
+        "Blokir otomatis jika clearance user lebih rendah dari klasifikasi aset",
+        "Periksa clearance semua karyawan saat onboarding dan review berkala",
+        "Kirim alert ke tim keamanan jika mismatch terdeteksi",
+    ],
+}
+
+# Iterasi dictionary dan tampilkan menggunakan UI Streamlit
+# Menggunakan st.expander agar rapi dan interaktif (bisa di-drop down)
+for pola, tips in mitigasi.items():
+    with st.expander(f"📌 {pola}"):
+        for tip in tips:
+            # Gunakan st.markdown untuk membuat bullet points seperti di HTML/Markdown
+            st.markdown(f"- {tip}")
+            
+st.divider()
+
